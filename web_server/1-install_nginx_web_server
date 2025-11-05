@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# This script installs and configures nginx web server
+
+# Update package list and install nginx with -y flag
+apt-get update -y
+apt-get install nginx -y
+
+# Create custom HTML page with required string
+echo "Holberton School" > /var/www/html/index.nginx-debian.html
+
+# Ensure nginx is configured to listen on port 80 (default)
+# Start nginx service (not using systemctl as required)
+service nginx start
+
+# Enable nginx to start on boot
+update-rc.d nginx defaults
