@@ -5,12 +5,43 @@
 apt-get update -y
 apt-get install nginx -y
 
-# Create custom HTML page with required string
-echo "Holberton School" > /var/www/html/index.nginx-debian.html
+# Create the custom HTML page with the exact required string
+echo "Holberton School" > /var/www/html/index.html
 
-# Ensure nginx is configured to listen on port 80 (default)
-# Start nginx service (not using systemctl as required)
+# Ensure nginx configuration is correct for port 80
+# Replace the default server block to ensure it listens on port 80
+cat > /etc/nginx/sites-available/default << 'EOF'
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+EOF
+
+# Test nginx configuration
+nginx -t
+
+# Stop any running nginx processes
+pkill nginx || true
+
+# Start nginx service (not using systemctl)
 service nginx start
 
-# Enable nginx to start on boot
-update-rc.d nginx defaults
+# Wait a moment for nginx to fully start
+sleep 2
+
+# Verify nginx is running and listening on port 80
+if netstat -tulpn | grep -q :80; then
+    echo "Nginx is running on port 80"
+else
+    echo "Nginx failed to start on port 80"
+    exit 1
+fi
