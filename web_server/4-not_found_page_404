@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # 4-not_found_page_404: Configure a custom 404 page for Nginx
 
+
 # Variables
 NGINX_CONF="/etc/nginx/sites-available/default"
 CUSTOM_404_PAGE="/var/www/html/404.html"
